@@ -1,5 +1,7 @@
 # Ansible Role For Firewall
 
+[![CI](https://github.com/Asya-kawai/ansible-role-firewall/actions/workflows/ci.yml/badge.svg)](https://github.com/Asya-kawai/ansible-role-firewall/actions/workflows?query=workflow%3ACI)
+
 Setup Firewall configration with specific ports.
 
 # Examples
@@ -99,14 +101,10 @@ DryRun
 
 ```
 ansible-playbook -i inventory --private-key="~/.firewall/your_private_key" -CD webservers.yml --tags firewall
-
-ansible-playbook -i inventory --private-key="~/.firewall/your_private_key" -CD webservers.yml --tags firewall
 ```
 
 Apply
 
 ```
-ansible-playbook -i inventory --private-key="~/.firewall/your_private_key" -D webservers.yml --tags firewall
-
 ansible-playbook -i inventory --private-key="~/.firewall/your_private_key" -D webservers.yml --tags firewall
 ```
