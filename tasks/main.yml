@@ -1,0 +1,59 @@
+---
+- name: Update OS package caches for Debian
+  apt:
+    update_cache: yes
+  when: ansible_facts['os_family'] == 'Debian'
+  tags:
+    - firewall
+    - firewall-update-os-packages
+
+- name: Update OS package caches for CentOS
+  dnf:
+    update_cache: yes
+  when: ansible_facts['os_family'] == 'RedHat'
+  tags:
+    - firewall
+    - firewall-update-os-packages
+
+- name: Update OS packages
+  package:
+    name: '*'
+    state: latest
+  tags:
+    - firewall
+    - firewall-update-os-packages
+
+- name: Install OS packages for Debian
+  package:
+    name: "{{ firewall_debian_install }}"
+    state: present
+  when: ansible_facts['os_family'] == 'Debian'
+  tags:
+    - firewall
+    - firewall-install-os-packages
+
+- name: Install OS packages for CentOS
+  package:
+    name: "{{ firewall_redhat_install }}"
+    state: present
+  when: ansible_facts['os_family'] == 'RedHat'
+  tags:
+    - firewall
+    - firewall-install-os-packages
+
+# Firewall setting for Ubuntu
+- name: Configure ufw
+  import_tasks: ufw.yml
+  when: ansible_facts['os_family'] == 'Debian'
+  tags:
+    - firewall
+    - firewall-configure-ufw
+
+# Firewall setting for CentOS
+- name: Configure firewalld
+  import_tasks: firewalld.yml
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+  tags:
+    - firewall
+    - firewall-configure-firewalld

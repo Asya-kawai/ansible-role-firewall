@@ -1,0 +1,49 @@
+---
+- name: Gather service facts on CentOS
+  service_facts:
+
+- name: Start Firewalld service
+  systemd:
+    name: firewalld
+    state: started
+  when:
+    - ansible_facts.services['firewalld.service'].state == 'started'
+
+- name: Set logging with firewalld
+  command: firewall-cmd --set-log-denied=all
+  changed_when: false
+  when:
+    - ansible_facts.services['firewalld.service'].state == 'started'
+    - firewall_logging = 'on' or (firewall_logging | default(false) | bool)
+
+# Reference: https://github.com/FlatKey/ansible-firewalld-role
+- name: Allow specific ports with Firewalld
+  firewalld:
+    permanent: "{{ item.permanent | default('true') }}"
+    immediate: "{{ item.immediate | default('true') }}"
+    port: "{{ item.port }}/{{ item.protocol | default('tcp') }}"
+    state: "{{ item.state | default('enabled') }}"
+    zone: "{{ item.zone | default('public') }}"
+  with_items: "{{ firewall_firewalld_rules }}"
+  when:
+    - ansible_facts.services['firewalld.service'].state == 'started'
+  notify:
+    - Reload firewalld
+
+- name: set firewalld rich rules
+  firewalld:
+    rich_rule: "{{ item.rich_rule }}"
+    permanent: "{{ item.value.permanent | default('true') }}"
+    immediate: "{{ item.value.immediate | default('true') }}"
+    state: "{{ item.value.state | default('enabled') }}"
+    zone: "{{ item.value.zone | default('public') }}"
+  with_items: "{{ firewalld_rich_rules }}"
+  when:
+    - ansible_facts.services['firewalld.service'].state == 'started'
+  notify:
+    - Reload firewalld
+
+- name: Reload Firewalld service
+  systemd:
+    name: firewalld
+    state: reloaded

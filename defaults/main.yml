@@ -1,0 +1,34 @@
+---
+firewall_debian_install:
+  - ufw
+
+firewall_redhat_install:
+  - firewalld
+
+firewall_logging: on
+
+firewall_ufw_rules:
+  - rule: allow
+    interface: "{{ ansible_default_ipv4['interface'] }}"
+    to_port: 22
+    protocol: tcp
+
+firewall_firewalld_rules:
+  - permanent: yes
+    immediate: yes
+    interface: "{{ ansible_default_ipv4['interface'] }}"
+    zone: public
+    port: 22
+    protocol: tcp
+    state: enabled
+
+firewall_firewalld_rich_rules: []
+# firewall_firewalld_rich_rules is a list of objects having fields of
+# 'rich_rule', 'permanent', 'immediate', 'zone' and 'state'.
+# ---
+# The example of firewall_firewalld_rich_rules variable.
+# firewall_rirewalld_rich_rules:
+
+# Some firewall role can configure /etc/*/{firewalld.conf,ufw},
+# But We think not to need change from default.
+# Therefore, We have not defined any varaibles to change the setting file.

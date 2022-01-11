@@ -1,0 +1,44 @@
+---
+- name: Deny all incoming with ufw
+  ufw:
+    direction: incoming
+    port: any
+    policy: deny
+  notify:
+    - Reload ufw
+
+- name: Allow all outgoing with ufw
+  ufw:
+    direction: outgoing
+    proto: any
+    policy: allow
+  notify:
+    - Reload ufw
+
+- name: Set logging with ufw
+  ufw:
+    logging: "{{ firewall_logging }}"
+  notify:
+    - Reload ufw
+
+# Reference: https://github.com/Oefenweb/ansible-ufw
+- name: Allow specific ports with ufw
+  ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    interface: "{{ item.interface | default(firewall_default_interface) }}"
+    direction: "{{ item.direction | default('in') }}"
+    from_port: "{{ item.from_port | default('') }}"
+    to_port: "{{ item.to_port | default('') }}"
+    protocol: "{{ item.protocol | default('any') }}"
+    from_ip: "{{ item.from_ip | default('any') }}"
+    to_ip: "{{ item.to_ip | default('any') }}"
+    route: "{{ item.route | default(omit) }}"
+    log: "{{ item.log | default(false) }}"
+    comment: "{{ item.comment | default(omit) }}"
+  with_items: "{{ firewall_ufw_rules }}"
+  notify:
+    - Reload ufw
+
+- name: Enable ufw service
+  ufw:
+    state: enabled
