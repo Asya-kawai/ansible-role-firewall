@@ -1,6 +1,8 @@
 ---
 firewall_debian_install:
   - ufw
+  - iproute2
+  - procps
 
 firewall_redhat_install:
   - firewalld
