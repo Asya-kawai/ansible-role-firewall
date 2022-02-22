@@ -7,7 +7,7 @@
     name: firewalld
     state: started
   when:
-    - ansible_facts.services['firewalld.service'].state == 'started'
+    - not ansible_facts.services['firewalld.service'].state == 'started'
 
 - name: Set logging with firewalld
   command: firewall-cmd --set-log-denied=all
