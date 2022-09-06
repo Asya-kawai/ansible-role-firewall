@@ -30,7 +30,7 @@
   notify:
     - Reload firewalld
 
-- name: set firewalld rich rules
+- name: Set firewalld rich rules
   firewalld:
     rich_rule: "{{ item.rich_rule }}"
     permanent: "{{ item.value.permanent | default('true') }}"
