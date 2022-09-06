@@ -1,4 +1,5 @@
 ---
+# Block all imcoming with ufw
 - name: Deny all incoming with ufw
   ufw:
     direction: incoming
@@ -7,6 +8,7 @@
   notify:
     - Reload ufw
 
+# Accept all outgoing with ufw
 - name: Allow all outgoing with ufw
   ufw:
     direction: outgoing
