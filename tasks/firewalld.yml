@@ -18,7 +18,7 @@
 
 # Reference: https://github.com/FlatKey/ansible-firewalld-role
 - name: Allow specific ports with Firewalld
-  firewalld:
+  ansible.posix.firewalld:
     permanent: "{{ item.permanent | default('true') }}"
     immediate: "{{ item.immediate | default('true') }}"
     port: "{{ item.port }}/{{ item.protocol | default('tcp') }}"
@@ -31,7 +31,7 @@
     - Reload firewalld
 
 - name: Set firewalld rich rules
-  firewalld:
+  ansible.posix.firewalld:
     rich_rule: "{{ item.rich_rule }}"
     permanent: "{{ item.value.permanent | default('true') }}"
     immediate: "{{ item.value.immediate | default('true') }}"

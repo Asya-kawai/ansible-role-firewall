@@ -1,7 +1,7 @@
 ---
 # Block all imcoming with ufw
 - name: Deny all incoming with ufw
-  ufw:
+  community.general.ufw:
     direction: incoming
     port: any
     policy: deny
@@ -10,7 +10,7 @@
 
 # Accept all outgoing with ufw
 - name: Allow all outgoing with ufw
-  ufw:
+  community.general.ufw:
     direction: outgoing
     proto: any
     policy: allow
@@ -18,14 +18,14 @@
     - Reload ufw
 
 - name: Set logging with ufw
-  ufw:
+  community.general.ufw:
     logging: "{{ firewall_logging }}"
   notify:
     - Reload ufw
 
 # Reference: https://github.com/Oefenweb/ansible-ufw
 - name: Allow specific ports with ufw
-  ufw:
+  community.general.ufw:
     rule: "{{ item.rule | default('allow') }}"
     interface: "{{ item.interface | default(firewall_default_interface) }}"
     direction: "{{ item.direction | default('in') }}"
@@ -42,5 +42,5 @@
     - Reload ufw
 
 - name: Enable ufw service
-  ufw:
+  community.general.ufw:
     state: enabled
